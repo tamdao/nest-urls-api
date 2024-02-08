@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import axios from 'axios';
 import { SAMPLE_URLS } from './data';
 import { SortOptions } from './dto/get-urls-query.dto';
 
@@ -11,7 +12,7 @@ export interface UrlEntry {
 export class UrlsService {
   private urls: UrlEntry[] = SAMPLE_URLS;
 
-  getUrls(priority?: number, sort?: SortOptions): UrlEntry[] {
+  getUrls(priority?: number, sort?: SortOptions): Promise<UrlEntry[]> {
     let filteredUrls = this.urls;
 
     if (priority !== undefined) {
@@ -34,6 +35,21 @@ export class UrlsService {
       });
     }
 
-    return filteredUrls;
+    return this.getReachableUrls(filteredUrls);
+  }
+
+  private async getReachableUrls(urls: UrlEntry[]): Promise<UrlEntry[]> {
+    const allUrlCheckers = urls.map((item) =>
+      axios
+        .get(item.url, { timeout: 5000 })
+        .then((response) =>
+          response.status >= 200 && response.status < 300 ? item : null,
+        )
+        .catch(() => null),
+    );
+
+    const allUrls = await Promise.all(allUrlCheckers);
+
+    return allUrls.filter(Boolean);
   }
 }

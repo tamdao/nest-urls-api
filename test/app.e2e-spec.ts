@@ -25,25 +25,25 @@ describe('AppController (e2e)', () => {
       .expect('Hello World!');
   });
 
-  it('/urls (GET)', () => {
+  it('/urls (GET)', async () => {
     return request(app.getHttpServer())
       .get('/urls')
       .expect(200)
-      .expect(urlsService.getUrls());
+      .expect(await urlsService.getUrls());
   });
 
-  it('/urls?priority=1 (GET)', () => {
+  it('/urls?priority=1 (GET)', async () => {
     return request(app.getHttpServer())
       .get('/urls?priority=1')
       .expect(200)
-      .expect(urlsService.getUrls(1));
+      .expect(await urlsService.getUrls(1));
   });
 
-  it('/urls?sort=priority (GET)', () => {
+  it('/urls?sort=priority (GET)', async () => {
     return request(app.getHttpServer())
       .get('/urls?sort=priority')
       .expect(200)
-      .expect(urlsService.getUrls(undefined, 'priority'));
+      .expect(await urlsService.getUrls(undefined, 'priority'));
   });
 
   it('/urls?priority=invalid (GET) - Invalid priority', () => {

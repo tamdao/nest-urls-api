@@ -24,3 +24,17 @@ export const SAMPLE_URLS = [
     priority: 2,
   },
 ];
+export const SAMPLE_REACHABLE_URLS = [
+  {
+    url: 'https://gitlab.com',
+    priority: 4,
+  },
+  {
+    url: 'https://github.com',
+    priority: 4,
+  },
+  {
+    url: 'http://app.scnt.me',
+    priority: 3,
+  },
+];
